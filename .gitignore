@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+backend/venv/
+*.egg-info/
+.pytest_cache/
+
+# Django / local data
+*.sqlite3
+db.sqlite3
+backend/db.sqlite3
+backend/.env
+media/
+staticfiles/
+
+# Node
+node_modules/
+frontend/dist/
+frontend/node_modules/
+.vite/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Unrelated coursework in this folder
+spark_bigdata_assignment/
+spark_bigdata_assignment.zip
+sleeping_barber/
