@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import date
+from decimal import Decimal
 
 class Customer(models.Model):
     """Customer (vehicle owner) for the repair shop."""
@@ -109,6 +110,10 @@ class WorkOrder(models.Model):
     def __str__(self):
         return f"WO #{self.pk} – {self.vehicle}"
 
+    @property
+    def total_labor(self):
+        return (self.rate or Decimal("0")) * (self.estimated_time_hours or Decimal("0"))
+
 
 class ServiceItem(models.Model):
     """Canned service or part (labor/parts catalog)."""
@@ -147,6 +152,10 @@ class Estimate(models.Model):
 
     def __str__(self):
         return f"Estimate #{self.pk} (WO #{self.work_order_id}, v{self.version})"
+
+    @property
+    def total(self):
+        return sum((item.total for item in self.line_items.all()), Decimal("0"))
 
 
 class LineItem(models.Model):
@@ -200,6 +209,10 @@ class Invoice(models.Model):
 
     def __str__(self):
         return f"Invoice #{self.pk} (WO #{self.work_order_id})"
+
+    @property
+    def total(self):
+        return sum((item.total for item in self.line_items.all()), Decimal("0"))
 
 
 class InvoiceLineItem(models.Model):
