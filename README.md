@@ -67,7 +67,16 @@ cp .env.example .env
 
 python manage.py migrate
 python manage.py createsuperuser   # Create a user to log in with
+python manage.py seed_demo         # Optional: load sample customers, vehicles, work orders, estimates, invoices
 python manage.py runserver
+```
+
+Use `python manage.py seed_demo --reset` to wipe shop data and reload the sample set.
+
+Run the backend tests with:
+
+```bash
+python manage.py test shop
 ```
 
 API runs at **http://localhost:8000**.  
@@ -99,9 +108,11 @@ Optional: create `frontend/.env` with `VITE_API_URL=http://localhost:8000` if yo
 |---------------------|--------------------|
 | `POST /api/auth/token/` | Obtain JWT (username, password) |
 | `POST /api/auth/token/refresh/` | Refresh JWT |
-| `GET/POST /api/customers/` | List/create customers |
-| `GET/POST /api/vehicles/` | List/create vehicles (?customer_id= for filter) |
-| `GET/POST /api/work-orders/` | List/create work orders (?status= filter) |
+| `GET/POST /api/customers/` | List/create customers (?search= by name, email, phone) |
+| `GET/POST /api/vehicles/` | List/create vehicles (?customer_id= filter, ?search=) |
+| `GET/POST /api/work-orders/` | List/create work orders (?status= filter, ?search=) |
+| `GET /api/work-orders/stats/` | Dashboard counts (by status, open, urgent, customers, vehicles) |
+| `POST /api/work-orders/{id}/create_estimate/` | Create the next estimate revision (v1, v2, ...) |
 | `GET/POST /api/estimates/` | List/create estimates (?work_order_id= filter) |
 | `GET/POST /api/invoices/` | List/create invoices |
 | `GET/POST /api/technicians/` | List technicians |
@@ -110,9 +121,11 @@ Optional: create `frontend/.env` with `VITE_API_URL=http://localhost:8000` if yo
 All API requests (except auth) require the header:  
 `Authorization: Bearer <access_token>`.
 
+Access tokens last 15 minutes; the frontend automatically uses the refresh token to get a new one when a request returns 401.
+
 ## Next steps
 
-- Add work order create/edit form and estimate builder in the Vue app
+- Estimate builder in the Vue app (add line items from the service catalog)
 - Add invoice creation from estimates and payment tracking
 - Add reporting (dashboard stats, revenue, etc.)
 - Optional: SMS/email for estimates and invoices, multi-location support
