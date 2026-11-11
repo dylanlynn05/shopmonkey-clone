@@ -4,6 +4,13 @@
       <h1 class="page-title">Customers</h1>
       <button class="btn btn-primary" @click="showForm = true">Add customer</button>
     </div>
+    <input
+      v-model="search"
+      class="search-input"
+      type="search"
+      placeholder="Search by name, email, or phone"
+      @input="onSearch"
+    />
     <div class="card table-wrap">
       <table>
         <thead>
@@ -70,6 +77,8 @@ import api from '../api'
 const customers = ref([])
 const loading = ref(false)
 const showForm = ref(false)
+const search = ref('')
+let searchTimer = null
 const form = ref({
   first_name: '',
   last_name: '',
@@ -82,7 +91,8 @@ const form = ref({
 async function fetchCustomers() {
   loading.value = true
   try {
-    const { data } = await api.get('/api/customers/')
+    const params = search.value.trim() ? { search: search.value.trim() } : {}
+    const { data } = await api.get('/api/customers/', { params })
     customers.value = data.results ?? data
   } catch {
     customers.value = []
@@ -102,10 +112,20 @@ async function createCustomer() {
   }
 }
 
+function onSearch() {
+  clearTimeout(searchTimer)
+  searchTimer = setTimeout(fetchCustomers, 250)
+}
+
 onMounted(fetchCustomers)
 </script>
 
 <style scoped>
+.search-input {
+  width: 100%;
+  max-width: 360px;
+  margin-bottom: 1rem;
+}
 .modal-overlay {
   position: fixed;
   inset: 0;

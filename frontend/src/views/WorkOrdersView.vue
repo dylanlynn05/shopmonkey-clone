@@ -184,7 +184,9 @@ function customerLabel(wo) {
 
 function formatDate(val) {
   if (!val) return '—'
-  const d = new Date(val)
+  // Date-only strings ("2026-11-11") are parsed as UTC midnight, which shows as the previous day in US time zones.
+  const dateOnly = /^(\d{4})-(\d{2})-(\d{2})$/.exec(val)
+  const d = dateOnly ? new Date(+dateOnly[1], +dateOnly[2] - 1, +dateOnly[3]) : new Date(val)
   return d.toLocaleDateString()
 }
 

@@ -31,12 +31,14 @@ export const useAuthStore = defineStore('auth', () => {
   async function login(username, password) {
     const { data } = await api.post('/api/auth/token/', { username, password })
     setToken(data.access)
+    localStorage.setItem('refreshToken', data.refresh)
     api.defaults.headers.common['Authorization'] = `Bearer ${data.access}`
     return data
   }
 
   function logout() {
     setToken(null)
+    localStorage.removeItem('refreshToken')
     delete api.defaults.headers.common['Authorization']
   }
 

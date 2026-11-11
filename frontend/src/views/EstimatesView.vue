@@ -10,6 +10,9 @@
             <th>ID</th>
             <th>Work order</th>
             <th>Version</th>
+            <th>Lines</th>
+            <th>Total</th>
+            <th>Approved</th>
             <th>Created</th>
           </tr>
         </thead>
@@ -18,10 +21,13 @@
             <td>#{{ e.id }}</td>
             <td>WO #{{ e.work_order }}</td>
             <td>v{{ e.version }}</td>
+            <td>{{ e.line_items.length }}</td>
+            <td>{{ formatMoney(e.total) }}</td>
+            <td>{{ e.approved_at ? formatDate(e.approved_at) : '—' }}</td>
             <td>{{ formatDate(e.created_at) }}</td>
           </tr>
           <tr v-if="estimates.length === 0 && !loading">
-            <td colspan="4" style="text-align: center; color: var(--text-muted);">No estimates yet.</td>
+            <td colspan="7" style="text-align: center; color: var(--text-muted);">No estimates yet.</td>
           </tr>
         </tbody>
       </table>
@@ -39,6 +45,12 @@ const loading = ref(false)
 function formatDate(val) {
   if (!val) return '—'
   return new Date(val).toLocaleDateString()
+}
+
+function formatMoney(val) {
+  const n = Number(val)
+  if (Number.isNaN(n)) return '—'
+  return new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(n)
 }
 
 onMounted(async () => {

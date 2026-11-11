@@ -3,7 +3,7 @@
     <aside class="sidebar">
       <div class="brand">Repair Shop</div>
       <nav class="nav">
-        <router-link to="/" class="nav-link" active-class="active">Dashboard</router-link>
+        <router-link to="/" class="nav-link" active-class="" exact-active-class="active">Dashboard</router-link>
         <router-link to="/customers" class="nav-link" active-class="active">Customers</router-link>
         <router-link to="/technicians" class="nav-link" active-class="active">Technicians</router-link>
         <router-link to="/vehicles" class="nav-link" active-class="active">Vehicles</router-link>

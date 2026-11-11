@@ -128,13 +128,19 @@ const editingTechnician = ref(null)
 const deleteTarget = ref(null)
 const errorMessage = ref('')
 
+// toISOString() is UTC, so in the evening (US time) it would return tomorrow's date.
+function todayLocal() {
+  const d = new Date()
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
 const emptyForm = () => ({
   first_name: '',
   last_name: '',
   email: '',
   phone: '',
   level: 'C',
-  date_started: new Date().toISOString().slice(0, 10),
+  date_started: todayLocal(),
   is_active: true,
 })
 
@@ -168,7 +174,7 @@ function openEditForm(technician) {
     email: technician.email || '',
     phone: technician.phone || '',
     level: technician.level || 'C',
-    date_started: technician.date_started || new Date().toISOString().slice(0, 10),
+    date_started: technician.date_started || todayLocal(),
     is_active: technician.is_active,
   }
   errorMessage.value = ''
